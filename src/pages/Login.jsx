@@ -16,10 +16,13 @@ function Login() {
 
     try {
       // 🚀 லோக்கல் லிங்க் மாற்றப்பட்டு லைவ் லிங்க் சேர்க்கப்பட்டுள்ளது
-      const res = await axios.post("https://auth-api-dnbf.onrender.com/auth/login", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "https://auth-api-dnbf.onrender.com/auth/login",
+        {
+          email,
+          password,
+        },
+      );
 
       if (res.data.message === "Login Success") {
         localStorage.setItem("token", res.data.access_token);
@@ -71,3 +74,5 @@ function Login() {
 }
 
 export default Login;
+
+// test change for vercel build

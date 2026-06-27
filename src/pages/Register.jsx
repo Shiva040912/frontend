@@ -21,7 +21,7 @@ function Register() {
           name,
           email,
           password,
-        }
+        },
       );
 
       alert("Registered Successfully");
@@ -80,3 +80,5 @@ function Register() {
 }
 
 export default Register;
+
+// test change for vercel build
