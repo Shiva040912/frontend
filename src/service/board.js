@@ -1,9 +1,10 @@
 import axios from "axios";
 
-const API = "https://auth-api-dnbf.onrender.com";
+// 🚀 '/boards' எண்ட்-பாயிண்ட் சேர்க்கப்பட்டுள்ளது
+const API = "https://auth-api-dnbf.onrender.com/boards"; 
 
 export const getBoards = (projectId) =>
-  axios.get(`${API}/project/${projectId}`, {
+  axios.get(`https://auth-api-dnbf.onrender.com/project/${projectId}`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },

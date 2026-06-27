@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  // 🚀 லோக்கல் ஸ்டோரேஜ்ல ஏற்கனவே ஈமெயில் இருந்தா அதை ஆரம்பத்திலேயே எடுத்து செட் பண்றோம் bro
+  const [email, setEmail] = useState(localStorage.getItem("email") || "");
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -38,6 +39,7 @@ function Login() {
       alert("Login Failed");
     }
   };
+
   return (
     <div className="auth-container">
       <div className="auth-card">
@@ -47,6 +49,7 @@ function Login() {
           <input
             type="email"
             placeholder="Enter Email"
+            value={email} // 🚀 இந்த வரியை சேர்த்தா தான் பழைய ஈமெயில் பாக்ஸ்ல தானா வந்து நிக்கும்!
             onChange={(e) => setEmail(e.target.value)}
             required
           />
@@ -75,4 +78,4 @@ function Login() {
 
 export default Login;
 
-// test change for vercel build
+// fresh trigger comment: storage autofill added successfully

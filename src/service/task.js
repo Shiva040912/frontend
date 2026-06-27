@@ -1,9 +1,10 @@
 import axios from "axios";
 
-const API = "https://auth-api-dnbf.onrender.com";
+// 🚀 '/tasks' எண்ட்-பாயிண்ட் சேர்க்கப்பட்டுள்ளது
+const API = "https://auth-api-dnbf.onrender.com/tasks"; 
 
 export const getTasks = (boardId) =>
-  axios.get(`${API}/board/${boardId}`, {
+  axios.get(`https://auth-api-dnbf.onrender.com/board/${boardId}`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -16,6 +17,7 @@ export const createTask = (data) =>
     },
   });
 
+// 💡 Drag and Drop செய்யும் போது இந்த updateTask தான் பேக்கண்டில் காலாகும்!
 export const updateTask = (id, data) =>
   axios.patch(`${API}/${id}`, data, {
     headers: {
