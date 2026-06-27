@@ -33,4 +33,4 @@ export const deleteBoard = (id) =>
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-  });
+  }); 
