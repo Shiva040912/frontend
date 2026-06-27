@@ -1,0 +1,158 @@
+/* ---- Kanban Specific Design ---- */
+.kanban-page {
+  padding: 40px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.kanban-page h1 {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 24px;
+  font-weight: 700;
+}
+
+/* Kanban task creator form style */
+.task-form {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.task-form input, 
+.task-form select {
+  flex: 1;
+  min-width: 200px;
+}
+
+.task-form button {
+  background: #6366f1;
+  color: white;
+  padding: 14px 24px;
+}
+
+.task-form button:hover {
+  background: #4f46e5;
+}
+
+/* Kanban Horizontal Swimlanes Container */
+.kanban-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  overflow-x: auto;
+  padding-bottom: 20px;
+}
+
+/* Individual Column Wrapper */
+.kanban-column {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  width: 320px;
+  min-width: 320px;
+  padding: 16px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.kanban-column h2 {
+  font-size: 1.1rem;
+  color: #e2e8f0;
+  margin-bottom: 16px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Draggable Task Cards */
+.task-card {
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: grab;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.task-card h4 {
+  font-size: 1rem;
+  color: #f8fafc;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.task-card p {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+/* Task CRUD action buttons */
+.task-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.task-actions button {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+}
+
+.task-actions .update-task {
+  background: rgba(99, 102, 241, 0.1);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.task-actions .update-task:hover {
+  background: rgba(99, 102, 241, 0.2);
+}
+
+.task-actions .delete-task {
+  background: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.task-actions .delete-task:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+/* Custom Scrollbar for modern feel */
+.kanban-column::-webkit-scrollbar,
+.kanban-container::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.kanban-column::-webkit-scrollbar-thumb,
+.kanban-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.kanban-column::-webkit-scrollbar-thumb:hover,
+.kanban-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
