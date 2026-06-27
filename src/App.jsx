@@ -4,7 +4,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Project from "./pages/Project";
 import Boards from "./pages/Boards";
-import Kanban from "./pages/Kanban";
+import Kanban from "./pages/kanban";
 
 function App() {
   return (
