@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   // 🚀 லோக்கல் ஸ்டோரேஜ்ல ஏற்கனவே ஈமெயில் இருந்தா அதை ஆரம்பத்திலேயே எடுத்து செட் பண்றோம் bro
-  const [email, setEmail] = useState(localStorage.getItem("email") || "");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
 
