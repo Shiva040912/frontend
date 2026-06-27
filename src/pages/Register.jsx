@@ -14,8 +14,9 @@ function Register() {
     e.preventDefault();
 
     try {
+      // 🚀 லோக்கல் லிங்க் மாற்றப்பட்டு லைவ் லிங்க் சேர்க்கப்பட்டுள்ளது
       const res = await axios.post(
-        "http://localhost:3000/auth/register",
+        "https://auth-api-dnbf.onrender.com/auth/register",
         {
           name,
           email,
