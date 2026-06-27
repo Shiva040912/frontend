@@ -3,15 +3,15 @@ import axios from "axios";
 // 🚀 பேக்கண்ட் மெயின் URL (Render லிங்க்)
 const BACKEND_URL = "https://auth-api-dnbf.onrender.com"; 
 
-// 1. போர்டுகளைக் கொண்டு வர (Get Boards)
+// 1. போர்டுகளைக் கொண்டு வர (Get Boards) - பாத்: /boards/project/:projectId
 export const getBoards = (projectId) =>
-  axios.get(`${BACKEND_URL}/project/${projectId}`, { // 🚀 இப்போ கரெக்ட்டா Render லிங்க்கை கூப்பிடும்!
+  axios.get(`${BACKEND_URL}/boards/project/${projectId}`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   });
 
-// 2. புது போர்டு கிரியேட் பண்ண (Create Board)
+// 2. புது போர்டு கிரியேட் பண்ண (Create Board) - பாத்: /boards
 export const createBoard = (data) =>
   axios.post(`${BACKEND_URL}/boards`, data, {
     headers: {
@@ -19,7 +19,7 @@ export const createBoard = (data) =>
     },
   });
 
-// 3. போர்டை அப்டேட் பண்ண (Update Board)
+// 3. போர்டை அப்டேட் பண்ண (Update Board) - பாத்: /boards/:id
 export const updateBoard = (id, data) =>
   axios.patch(`${BACKEND_URL}/boards/${id}`, data, {
     headers: {
@@ -27,7 +27,7 @@ export const updateBoard = (id, data) =>
     },
   });
 
-// 4. போர்டை டெலிட் பண்ண (Delete Board)
+// 4. போர்டை டெலிட் பண்ண (Delete Board) - பாத்: /boards/:id
 export const deleteBoard = (id) =>
   axios.delete(`${BACKEND_URL}/boards/${id}`, {
     headers: {
