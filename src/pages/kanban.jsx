@@ -20,16 +20,23 @@ function Kanban() {
   const [description, setDescription] = useState("");
 
   const [selectedColumn, setSelectedColumn] = useState("");
+
   const loadData = async () => {
     try {
       const colRes = await getColumns(boardId);
       const taskRes = await getTasks(boardId);
 
-      setColumns(colRes.data);
+      // 🚀 காலம்களை To Do -> In Progress -> Done என்ற வரிசையில் வரிசைப்படுத்துகிறோம் (Sorting)
+      const orderedColumns = (colRes.data || []).sort((a, b) => {
+        const order = ["to do", "in progress", "done"];
+        return order.indexOf(a.name.toLowerCase()) - order.indexOf(b.name.toLowerCase());
+      });
+
+      setColumns(orderedColumns);
       setTasks(taskRes.data);
 
-      if (colRes.data.length > 0) {
-        setSelectedColumn(colRes.data[0]._id);
+      if (orderedColumns.length > 0) {
+        setSelectedColumn(orderedColumns[0]._id);
       }
     } catch (err) {
       console.log(err);
@@ -41,8 +48,6 @@ function Kanban() {
 
     if (boardId) {
       socket.emit("joinBoard", boardId);
-
-      
     }
   }, [boardId]);
 
@@ -53,30 +58,26 @@ function Kanban() {
       );
     });
 
-    socket.on("taskCreated", (newTask)=>{
+    socket.on("taskCreated", (newTask) => {
       console.log("TASK CREATED EVENT RECEIVED", newTask);
-      setTasks((prev)=>{
-        const exists = prev.some(
-          (task)=> task._id === newTask._id
-        )
+      setTasks((prev) => {
+        const exists = prev.some((task) => task._id === newTask._id);
+        if (exists) return prev;
+        return [...prev, newTask];
+      });
+    });
 
-        if (exists) return prev
-
-        return [...prev , newTask]
-      })
-    })
-
-    socket.on("taskDeleted", (taskId)=>{
-      setTasks((prev)=>
-      prev.filter((task)=> task._id !==taskId))
-    })
+    socket.on("taskDeleted", (taskId) => {
+      setTasks((prev) => prev.filter((task) => task._id !== taskId));
+    });
 
     return () => {
       socket.off("taskUpdated");
-      socket.off("taskCreated")
-      socket.off("taskDeleted")
-    }
+      socket.off("taskCreated");
+      socket.off("taskDeleted");
+    };
   }, []);
+
   const addTask = async () => {
     if (!title) {
       alert("Task title required");
@@ -104,13 +105,12 @@ function Kanban() {
       console.log(err);
     }
   };
+
   const editTask = async (task) => {
     const newTitle = prompt("Enter Task Title", task.title);
-
     if (newTitle === null) return;
 
     const newDescription = prompt("Enter Description", task.description);
-
     if (newDescription === null) return;
 
     try {
@@ -138,7 +138,6 @@ function Kanban() {
   const removeTask = async (id) => {
     try {
       await deleteTask(id);
-
       setTasks(tasks.filter((task) => task._id !== id));
     } catch (err) {
       console.log(err);
@@ -149,7 +148,6 @@ function Kanban() {
     if (!result.destination) return;
 
     const taskId = result.draggableId;
-
     const newColumnId = result.destination.droppableId;
 
     try {
@@ -234,7 +232,6 @@ function Kanban() {
                             {...provided.dragHandleProps}
                           >
                             <h4>{task.title}</h4>
-
                             <p>{task.description}</p>
 
                             <div className="task-actions">
