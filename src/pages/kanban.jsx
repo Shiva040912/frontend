@@ -11,6 +11,8 @@ import { socket } from "../service/socket";
 import "./kanban.css";
 
 function Kanban() {
+
+  
   const { boardId } = useParams();
 
   const [columns, setColumns] = useState([]);
