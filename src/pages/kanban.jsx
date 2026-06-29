@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
@@ -8,11 +8,10 @@ import { getTasks, createTask, updateTask, deleteTask } from "../service/task";
 
 import { socket } from "../service/socket";
 
+import TaskCard from "../components/TaskCard";
 import "./kanban.css";
 
 function Kanban() {
-
-  
   const { boardId } = useParams();
 
   const [columns, setColumns] = useState([]);
@@ -20,18 +19,20 @@ function Kanban() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-
   const [selectedColumn, setSelectedColumn] = useState("");
 
+  // 📌 Load Data
   const loadData = async () => {
     try {
       const colRes = await getColumns(boardId);
       const taskRes = await getTasks(boardId);
 
-     
       const orderedColumns = (colRes.data || []).sort((a, b) => {
         const order = ["to do", "in progress", "done"];
-        return order.indexOf(a.name.toLowerCase()) - order.indexOf(b.name.toLowerCase());
+        return (
+          order.indexOf(a.name.toLowerCase()) -
+          order.indexOf(b.name.toLowerCase())
+        );
       });
 
       setColumns(orderedColumns);
@@ -53,15 +54,17 @@ function Kanban() {
     }
   }, [boardId]);
 
+  // 📌 socket updates
   useEffect(() => {
     socket.on("taskUpdated", (updatedTask) => {
       setTasks((prev) =>
-        prev.map((task) => (task._id === updatedTask._id ? updatedTask : task)),
+        prev.map((task) =>
+          task._id === updatedTask._id ? updatedTask : task
+        )
       );
     });
 
     socket.on("taskCreated", (newTask) => {
-      console.log("TASK CREATED EVENT RECEIVED", newTask);
       setTasks((prev) => {
         const exists = prev.some((task) => task._id === newTask._id);
         if (exists) return prev;
@@ -70,7 +73,9 @@ function Kanban() {
     });
 
     socket.on("taskDeleted", (taskId) => {
-      setTasks((prev) => prev.filter((task) => task._id !== taskId));
+      setTasks((prev) =>
+        prev.filter((task) => task._id !== taskId)
+      );
     });
 
     return () => {
@@ -80,35 +85,8 @@ function Kanban() {
     };
   }, []);
 
-  const addTask = async () => {
-    if (!title) {
-      alert("Task title required");
-      return;
-    }
-
-    if (columns.length === 0) {
-      alert("No columns found");
-      return;
-    }
-
-    try {
-      const res = await createTask({
-        title,
-        description,
-        board: boardId,
-        column: selectedColumn,
-      });
-
-      setTasks([...tasks, res.data]);
-
-      setTitle("");
-      setDescription("");
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const editTask = async (task) => {
+  // 📌 Optimized functions
+  const editTask = useCallback(async (task) => {
     const newTitle = prompt("Enter Task Title", task.title);
     if (newTitle === null) return;
 
@@ -124,23 +102,44 @@ function Kanban() {
       setTasks((prev) =>
         prev.map((t) =>
           t._id === task._id
-            ? {
-                ...t,
-                title: newTitle,
-                description: newDescription,
-              }
-            : t,
-        ),
+            ? { ...t, title: newTitle, description: newDescription }
+            : t
+        )
       );
     } catch (err) {
       console.log(err);
     }
-  };
+  }, []);
 
-  const removeTask = async (id) => {
+  const removeTask = useCallback(async (id) => {
     try {
       await deleteTask(id);
-      setTasks(tasks.filter((task) => task._id !== id));
+      setTasks((prev) =>
+        prev.filter((task) => task._id !== id)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+
+  const addTask = async () => {
+    if (!title) {
+      alert("Task title required");
+      return;
+    }
+
+    try {
+      const res = await createTask({
+        title,
+        description,
+        board: boardId,
+        column: selectedColumn,
+      });
+
+      setTasks((prev) => [...prev, res.data]);
+
+      setTitle("");
+      setDescription("");
     } catch (err) {
       console.log(err);
     }
@@ -160,17 +159,20 @@ function Kanban() {
       setTasks((prev) =>
         prev.map((task) =>
           task._id === taskId
-            ? {
-                ...task,
-                column: newColumnId,
-              }
-            : task,
-        ),
+            ? { ...task, column: newColumnId }
+            : task
+        )
       );
     } catch (err) {
       console.log(err);
     }
   };
+
+  // 📌 VERY IMPORTANT FIX (useMemo)
+  const getTasksByColumn = useMemo(() => {
+    return (columnId) =>
+      tasks.filter((task) => task.column === columnId);
+  }, [tasks]);
 
   return (
     <div className="kanban-page">
@@ -215,12 +217,12 @@ function Kanban() {
                 >
                   <h2>
                     {column.name} (
-                    {tasks.filter((task) => task.column === column._id).length})
+                    {getTasksByColumn(column._id).length}
+                    )
                   </h2>
 
-                  {tasks
-                    .filter((task) => task.column === column._id)
-                    .map((task, index) => (
+                  {getTasksByColumn(column._id).map(
+                    (task, index) => (
                       <Draggable
                         key={task._id}
                         draggableId={task._id}
@@ -228,33 +230,20 @@ function Kanban() {
                       >
                         {(provided) => (
                           <div
-                            className="task-card"
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
-                            <h4>{task.title}</h4>
-                            <p>{task.description}</p>
-
-                            <div className="task-actions">
-                              <button
-                                className="update-task"
-                                onClick={() => editTask(task)}
-                              >
-                                Update
-                              </button>
-
-                              <button
-                                className="delete-task"
-                                onClick={() => removeTask(task._id)}
-                              >
-                                Delete
-                              </button>
-                            </div>
+                            <TaskCard
+                              task={task}
+                              editTask={editTask}
+                              removeTask={removeTask}
+                            />
                           </div>
                         )}
                       </Draggable>
-                    ))}
+                    )
+                  )}
 
                   {provided.placeholder}
                 </div>
