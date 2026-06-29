@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// 🚀 '/projects' எண்ட்-பாயிண்ட் சேர்க்கப்பட்டுள்ளது
+
 const API_URL = "https://auth-api-dnbf.onrender.com/projects"; 
 
 const getToken = () => localStorage.getItem("token");

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  // 🚀 லோக்கல் ஸ்டோரேஜ்ல ஏற்கனவே ஈமெயில் இருந்தா அதை ஆரம்பத்திலேயே எடுத்து செட் பண்றோம் bro
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
@@ -16,7 +16,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      // 🚀 லோக்கல் லிங்க் மாற்றப்பட்டு லைவ் லிங்க் சேர்க்கப்பட்டுள்ளது
+      
       const res = await axios.post(
         "https://auth-api-dnbf.onrender.com/auth/login",
         {
@@ -49,7 +49,7 @@ function Login() {
           <input
             type="email"
             placeholder="Enter Email"
-            value={email} // 🚀 இந்த வரியை சேர்த்தா தான் பழைய ஈமெயில் பாக்ஸ்ல தானா வந்து நிக்கும்!
+            value={email} 
             onChange={(e) => setEmail(e.target.value)}
             required
           />

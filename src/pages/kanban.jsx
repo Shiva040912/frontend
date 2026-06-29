@@ -26,7 +26,7 @@ function Kanban() {
       const colRes = await getColumns(boardId);
       const taskRes = await getTasks(boardId);
 
-      // 🚀 காலம்களை To Do -> In Progress -> Done என்ற வரிசையில் வரிசைப்படுத்துகிறோம் (Sorting)
+     
       const orderedColumns = (colRes.data || []).sort((a, b) => {
         const order = ["to do", "in progress", "done"];
         return order.indexOf(a.name.toLowerCase()) - order.indexOf(b.name.toLowerCase());
